@@ -44,10 +44,15 @@ if league_id_input:
             st.dataframe(df, use_container_width=True)
 
             # --- 5. Monte Carlo simulation button ---
+            from fpl.monte_carlo import run_simulation
+
             if st.button("Simulate rest of season: "):
-                st.subheader("Season Projection (Monte Carlo)")
-                sim_results = run_monte_carlo(league_id, team_id)
-                st.write(sim_results)
+                with st.spinner("Loading..."):
+                    st.subheader("Season Projection after 10,000 simulations")
+                    sim_results = run_simulation(league_id, team_id)
+                st.subheader("Simulation Results")
+                st.metric("Expected Final Rank", sim_results["expected_rank"])
+                st.metric("Win Probability", f"{sim_results['win_probability']:.1%}")
 
         except Exception as e:
             st.error(f"Error fetching teams or table: {e}")
