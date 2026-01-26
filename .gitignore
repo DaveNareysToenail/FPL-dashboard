@@ -1,0 +1,23 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VS Code settings
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Cache / data directories
+data/cache/*
+!data/cache/.gitkeep
+
+# Logs
+*.log
+
+# Environment / virtualenv
+env/
+venv/
+*.env
