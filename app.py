@@ -29,7 +29,7 @@ if league_id_input:
 
         # --- 2. Set dynamic page title & header ---
         st.set_page_config(page_title=f"{league_name} Dashboard", layout="wide")
-        st.title(f"{league_name} Dashboard")
+        st.title(f"{league_name} Dashboard 🚀")
 
         # --- 3. Fetch teams for dropdown ---
         try:
