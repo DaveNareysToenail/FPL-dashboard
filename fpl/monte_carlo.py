@@ -9,6 +9,17 @@ from .league import get_league_teams
 # Assumes GW points ~ Normal(mean, std)
 # Applies floors to avoid degenerate distributions
 
+def exponential_weights(n, half_life): #function to weight recent gameweeks more heavily
+    
+    lam = np.log(2) / half_life
+    ages  = np.arange(n)[::-1]
+    weights = np.exp(-lam * ages)
+    return weights / weights.sum()
+
+def weighted_mean_std(values, weights): #function to weight variance by recency
+    mean = np.sum(weights * values)
+    variance = np.sum(weights * (values - mean) ** 2)
+    return mean, np.sqrt(variance)
 
 def run_simulation(league_id, team_id, n_sims=10_000):
  
@@ -24,6 +35,9 @@ def run_simulation(league_id, team_id, n_sims=10_000):
         entry_id = team["id"]
 
         gw_points = get_team_history(entry_id)
+
+        weights = exponential_weights(len(gw_points), half_life=6) #assumed half life of 6 weeks
+        mean, std = weighted_mean_std(np.array(gw_points), weights)
 
         team_data[entry_id] = {
             "name": team["team"],
@@ -88,8 +102,23 @@ def run_simulation(league_id, team_id, n_sims=10_000):
 
     win_probability = wins / n_sims
 
+    projected_table = []
+
+    for entry_id, projected_points in mean_final_points.items():
+        team = team_data[entry_id]
+
+        projected_table.append({
+            "rank": ranks[entry_id],
+            "team": team["name"],
+            "manager": team["manager"],
+            "projected_points": round(projected_points, 0),
+        })
+    
+    projected_table.sort(key=lambda x: x["rank"])
+
     return {
         "expected_rank": ranks.get(team_id),
         "win_probability": win_probability,
         "mean_final_points": mean_final_points,
+        "projected_table": projected_table,
     }
