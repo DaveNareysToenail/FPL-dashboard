@@ -3,12 +3,17 @@ from matplotlib.animation import FuncAnimation, FFMpegWriter
 import pandas as pd
 import tempfile
 import os
+import imageio_ffmpeg  # Provides ffmpeg for cloud
 from fpl.api import get_league_name, get_team_history
 from fpl.league import get_league_teams
 
 # --- Config ---
 FPS = 1          # Animation speed (frames per second)
 BAR_COUNT = None  # None = show all teams; set to int for top N
+
+# Point colors
+USER_COLOR = "#326c56"
+DEFAULT_COLOR = "#4e79a7"
 
 
 def race_animate(league_id, user_team_id=None, output_path="race.mp4"):
@@ -20,6 +25,10 @@ def race_animate(league_id, user_team_id=None, output_path="race.mp4"):
     :param output_path: str, file path to save MP4
     :return: path to saved MP4 video
     """
+    # Tell Matplotlib where ffmpeg lives
+    import matplotlib as mpl
+    mpl.rcParams["animation.ffmpeg_path"] = imageio_ffmpeg.get_ffmpeg_exe()
+
     # --- Fetch league info ---
     teams = get_league_teams(league_id)
     league_name = get_league_name(league_id)
@@ -61,7 +70,7 @@ def race_animate(league_id, user_team_id=None, output_path="race.mp4"):
             data = data.tail(BAR_COUNT)
 
         # Highlight user team
-        colors = ["#326c56" if (user_team_id is not None and tid == user_team_id) else "#4e79a7"
+        colors = [USER_COLOR if (user_team_id is not None and tid == user_team_id) else DEFAULT_COLOR
                   for tid in data["ID"]]
 
         ax.barh(data["Team"], data["Points"], color=colors)

@@ -3,3 +3,4 @@ requests
 pandas
 numpy
 matplotlib 
+imageio-ffmpeg>=0.4

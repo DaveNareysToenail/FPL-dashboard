@@ -50,18 +50,18 @@ if league_id_input:
             df = build_dataframe(league_id)
             st.dataframe(df, use_container_width=True, hide_index=True)
 
-            # -- 4.5. Show gw-by-gw league animation
-            st.subheader("League Race Animation")
+            #4.5 - week-by-week anim
 
-            if st.button("Play League Race 🏁"):
+            st.subheader("League Race Animation")
+            if st.button("Show League Race Chart"):
                 with st.spinner("Generating animation... This may take a few seconds..."):
                     try:
-                        # Use temporary file
+                        # Temporary MP4 file
                         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
                         temp_path = temp_file.name
                         temp_file.close()  # close so Matplotlib can write
 
-                        # Generate video
+                        # Generate MP4
                         race_animate(league_id, user_team_id=team_id, output_path=temp_path)
 
                         # Display video in Streamlit
