@@ -2,4 +2,4 @@ streamlit
 requests
 pandas
 numpy
-#matplotlib - not used yet
+matplotlib 
