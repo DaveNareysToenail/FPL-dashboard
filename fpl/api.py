@@ -39,7 +39,7 @@ def get_league_name(league_id):
     return data["league"]["name"]
 
 def get_team_history(entry_id):
-    url = f"https://fantasy.premierleague.com/api/entry/{entry_id}/history/"
+    url = f"{BASE_URL}/entry/{entry_id}/history/"
     r = session.get(url, headers=HEADERS, timeout=10)
     r.raise_for_status()
     data = r.json()

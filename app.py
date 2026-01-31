@@ -2,6 +2,9 @@ import streamlit as st
 from fpl.league import get_league_teams, build_dataframe 
 from fpl.api import get_league_name
 import pandas as pd
+from visualisations.race import race_animate
+import tempfile
+import os
 
 # Max league size for sim functionality
 MAX_LEAGUE_SIZE = 49
@@ -47,6 +50,29 @@ if league_id_input:
             df = build_dataframe(league_id)
             st.dataframe(df, use_container_width=True, hide_index=True)
 
+            # -- 4.5. Show gw-by-gw league animation
+            st.subheader("League Race Animation")
+
+            if st.button("Play League Race 🏁"):
+                with st.spinner("Generating animation... This may take a few seconds..."):
+                    try:
+                        # Use temporary file
+                        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+                        temp_path = temp_file.name
+                        temp_file.close()  # close so Matplotlib can write
+
+                        # Generate video
+                        race_animate(league_id, user_team_id=team_id, output_path=temp_path)
+
+                        # Display video in Streamlit
+                        st.video(temp_path)
+
+                        # Clean up temp file
+                        os.unlink(temp_path)
+
+                    except Exception as e:
+                        st.error(f"Failed to generate race animation: {e}")
+
             # -- 4.9. Check league size for simulation ---
             if len(teams) > MAX_LEAGUE_SIZE:
                 st.warning(
@@ -57,6 +83,8 @@ if league_id_input:
 
             # --- 5. Monte Carlo simulation button ---
             from fpl.monte_carlo import run_simulation
+
+            st.subheader("Season Sim")
 
             if st.button("Simulate rest of season: "):
                 with st.spinner("Loading..."):
