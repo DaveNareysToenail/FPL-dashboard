@@ -25,13 +25,14 @@ def build_dataframe(league_id): #function to build dataframe i.e. league table
             "rank": t["rank"], #League Position
             "team": t["entry_name"], #Team Name
             "manager": t["player_name"], #Manager
-            "total_points": t["total"], #Total Points
+            "total points": t["total"], #Total Points
             "team_id": t["entry"] #Team ID - will hide in visualisation but could be handy to have available
         })
 
     df = pd.DataFrame(rows) #Setup dataframe
 
     df = df.sort_values("rank").reset_index(drop=True) #Explicitly sort by rank for safety
+    df = df.drop(columns=["team_id"], errors="ignore")
 
     return df
 
