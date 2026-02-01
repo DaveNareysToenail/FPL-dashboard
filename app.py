@@ -1,6 +1,7 @@
 import streamlit as st
 from fpl.league import get_league_teams, build_dataframe 
 from fpl.api import get_league_name
+from fpl.chips import build_chips_table, style_chips
 import pandas as pd
 from visualisations.race import race_animate
 import tempfile
@@ -49,6 +50,13 @@ if league_id_input:
             st.subheader("Current League Table")
             df = build_dataframe(league_id)
             st.dataframe(df, use_container_width=True, hide_index=True)
+
+            # --- 4.25. Show league-wide chip usage ---
+            st.subheader("Chips Usage - League Overview")
+            df_chips = build_chips_table(league_id)
+            styled_chips = style_chips(df_chips)
+            st.dataframe(styled_chips, use_container_width=True)
+
 
             #4.5 - week-by-week anim
 

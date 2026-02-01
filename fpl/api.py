@@ -45,6 +45,11 @@ def get_team_history(entry_id):
     data = r.json()
     return [gw["points"] for gw in data.get("current", [])]
 
+def get_team_chips(entry_id):
+    url = f"{BASE_URL}/entry/{entry_id}/history"
+    data = requests.get(url, headers=HEADERS).json()
+    return data["chips"]
+
 
 
 
