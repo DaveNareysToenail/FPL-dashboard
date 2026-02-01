@@ -55,7 +55,7 @@ if league_id_input:
             st.subheader("Chips Usage - League Overview")
             df_chips = build_chips_table(league_id)
             styled_chips = style_chips(df_chips)
-            st.dataframe(styled_chips, use_container_width=True)
+            st.dataframe(styled_chips, use_container_width=True, hide_index=True)
 
 
             #4.5 - week-by-week anim
